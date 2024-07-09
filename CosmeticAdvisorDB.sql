@@ -1,0 +1,6 @@
+SELECT TOP (1000) [CosmeticId]
+      ,[Name]
+      ,[Brand]
+      ,[Category]
+      ,[SkinType]
+  FROM [CosmeticAdvisorDB].[dbo].[Cosmetics]
