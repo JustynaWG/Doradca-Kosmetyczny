@@ -1,20 +1,10 @@
-﻿(function() {
-    'use strict';
-
-    angular
-        .module('app')
-        .controller('Customer', Customer);
-
-    Customer.$inject = ['$location'];
-
-    function Customer($location)
+﻿namespace CosmeticAdvisor.Models
+{
+    public class Customer
     {
-        /* jshint validthis:true */
-        var vm = this;
-        vm.title = 'Customer';
-
-        activate();
-
-        function activate() { }
+        public int CustomerId { get; set; }
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public string SkinType { get; set; }
     }
-})();
+}
