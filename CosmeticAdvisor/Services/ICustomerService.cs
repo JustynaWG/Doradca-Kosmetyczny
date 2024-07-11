@@ -6,8 +6,8 @@ namespace CosmeticAdvisor.Services
 {
     public interface ICustomerService
     {
-        Task<IEnumerable<Customer>> GetCustomers();
-        Task<Customer> GetCustomer(int id);
+        Task<IEnumerable<Customer>> GetAllCustomers();
+        Task<Customer> GetCustomerById(int id);
         Task CreateCustomer(Customer customer);
         Task UpdateCustomer(Customer customer);
         Task DeleteCustomer(int id);

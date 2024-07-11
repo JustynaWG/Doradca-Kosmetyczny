@@ -38,5 +38,15 @@ namespace CosmeticAdvisor.Services
         {
             await _repository.DeleteCustomer(id);
         }
+
+        public Task<IEnumerable<Customer>> GetAllCustomers()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Customer> GetCustomerById(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -1,4 +1,8 @@
-﻿namespace CosmeticAdvisor.Services
+﻿using CosmeticAdvisor.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace CosmeticAdvisor.Services
 {
     public interface ICosmeticService
     {

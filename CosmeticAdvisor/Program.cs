@@ -1,5 +1,7 @@
 using CosmeticAdvisor.Repositories;
 using CosmeticAdvisor.Services;
+using CosmeticAdvisor.Data; // aby uzyskaæ dostêp do kontekstu EF Core
+using Microsoft.EntityFrameworkCore; // aby uzyskaæ dostêp do konfiguracji bazy danych
 
 namespace CosmeticAdvisor
 {
@@ -9,8 +11,9 @@ namespace CosmeticAdvisor
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Dodaj DapperContext jako singleton
-            builder.Services.AddSingleton<DapperContext>();
+            // Dodaj kontekst bazy danych do kontenera DI
+            builder.Services.AddDbContext<CosmeticAdvisorContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("Server=DESKTOP-RM3VCAU\\\\SQLEXPRESS01;Database=CosmeticAdvisorDB;Trusted_Connection=True;MultipleActiveResultSets=true")));
 
             // Dodaj repozytoria i us³ugi do kontenera DI
             builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
@@ -22,16 +25,12 @@ namespace CosmeticAdvisor
             builder.Services.AddScoped<IRecommendationRepository, RecommendationRepository>();
             builder.Services.AddScoped<IRecommendationService, RecommendationService>();
 
-
-
             // Dodaj inne us³ugi do kontenera
             builder.Services.AddControllers();
 
             // Konfiguracja Swagger/OpenAPI
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            builder.Services.AddSingleton<DapperContext>();
-
 
             var app = builder.Build();
 
