@@ -1,42 +1,38 @@
 ﻿using CosmeticAdvisor.Models;
-using CosmeticAdvisor.Repositories;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace CosmeticAdvisor.Services
 {
     public class RecommendationService : IRecommendationService
     {
-        private readonly IRecommendationRepository _repository;
-
-        public RecommendationService(IRecommendationRepository repository)
+        private readonly DapperContext _context;
+        public RecommendationService(DapperContext context)
         {
-            _repository = repository;
+            _context = context;
         }
 
-        public async Task<IEnumerable<Recommendation>> GetRecommendations()
+        public async Task<IEnumerable<Recommendation>> GetAllRecommendations()
         {
-            return await _repository.GetRecommendations();
+            // Implementation of the method
         }
 
-        public async Task<Recommendation> GetRecommendation(int id)
+        public async Task<Recommendation> GetRecommendationById(int id)
         {
-            return await _repository.GetRecommendation(id);
+            // Implementation of the method
         }
 
         public async Task CreateRecommendation(Recommendation recommendation)
         {
-            await _repository.CreateRecommendation(recommendation);
+            // Implementation of the method
         }
 
         public async Task UpdateRecommendation(Recommendation recommendation)
         {
-            await _repository.UpdateRecommendation(recommendation);
+            // Implementation of the method
         }
 
         public async Task DeleteRecommendation(int id)
         {
-            await _repository.DeleteRecommendation(id);
+            // Implementation of the method
         }
     }
 }

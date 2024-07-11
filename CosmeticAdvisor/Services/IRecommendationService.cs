@@ -6,8 +6,8 @@ namespace CosmeticAdvisor.Services
 {
     public interface IRecommendationService
     {
-        Task<IEnumerable<Recommendation>> GetRecommendations();
-        Task<Recommendation> GetRecommendation(int id);
+        Task<IEnumerable<Recommendation>> GetAllRecommendations();
+        Task<Recommendation> GetRecommendationById(int id);
         Task CreateRecommendation(Recommendation recommendation);
         Task UpdateRecommendation(Recommendation recommendation);
         Task DeleteRecommendation(int id);

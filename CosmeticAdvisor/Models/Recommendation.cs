@@ -1,4 +1,5 @@
-﻿public class Recommendation
+﻿namespace CosmeticAdvisor.Models;
+public class Recommendation
 {
     public int RecommendationId { get; set; }
     public int CustomerId { get; set; }

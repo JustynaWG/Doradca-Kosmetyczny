@@ -1,43 +1,40 @@
 ﻿using CosmeticAdvisor.Models;
-using CosmeticAdvisor.Repositories;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace CosmeticAdvisor.Services
 {
     public class CosmeticService : ICosmeticService
     {
-        private readonly ICosmeticRepository _repository;
-
-        public CosmeticService(ICosmeticRepository repository)
+        private readonly DapperContext _context;
+        public CosmeticService(DapperContext context)
         {
-            _repository = repository;
+            _context = context;
         }
 
-        public async Task<IEnumerable<Cosmetic>> GetCosmetics()
+        public async Task<IEnumerable<Cosmetic>> GetAllCosmetics()
         {
-            return await _repository.GetCosmetics();
+            // Implementation of the method
         }
 
-        public async Task<Cosmetic> GetCosmetic(int id)
+        public async Task<Cosmetic> GetCosmeticById(int id)
         {
-            return await _repository.GetCosmetic(id);
+            // Implementation of the method
         }
 
         public async Task CreateCosmetic(Cosmetic cosmetic)
         {
-            await _repository.CreateCosmetic(cosmetic);
+            // Implementation of the method
         }
 
         public async Task UpdateCosmetic(Cosmetic cosmetic)
         {
-            await _repository.UpdateCosmetic(cosmetic);
+            // Implementation of the method
         }
 
         public async Task DeleteCosmetic(int id)
         {
-            await _repository.DeleteCosmetic(id);
+            // Implementation of the method
         }
     }
 }
+
 
