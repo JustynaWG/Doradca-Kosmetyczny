@@ -13,4 +13,3 @@ namespace CosmeticAdvisor.Repositories
         Task DeleteCosmetic(int id);
     }
 }
-

@@ -1,4 +1,5 @@
-﻿using CosmeticAdvisor.Models;
+﻿
+using CosmeticAdvisor.Models;
 using Dapper;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -60,4 +61,3 @@ namespace CosmeticAdvisor.Repositories
         }
     }
 }
-

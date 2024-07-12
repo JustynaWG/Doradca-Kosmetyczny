@@ -4,8 +4,8 @@ using CosmeticAdvisor.Services;
 
 namespace CosmeticAdvisor.Controllers
 {
-    [ApiController]
     [Route("api/[controller]")]
+    [ApiController]
     public class CosmeticsController : ControllerBase
     {
         private readonly ICosmeticService _cosmeticService;
@@ -16,14 +16,14 @@ namespace CosmeticAdvisor.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetCosmetics()
         {
             var cosmetics = await _cosmeticService.GetAllCosmetics();
             return Ok(cosmetics);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<IActionResult> GetCosmetic(int id)
         {
             var cosmetic = await _cosmeticService.GetCosmeticById(id);
             if (cosmetic == null)
@@ -34,26 +34,25 @@ namespace CosmeticAdvisor.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Cosmetic cosmetic)
+        public async Task<IActionResult> CreateCosmetic(Cosmetic cosmetic)
         {
             await _cosmeticService.CreateCosmetic(cosmetic);
-            return CreatedAtAction(nameof(GetById), new { id = cosmetic.CosmeticId }, cosmetic);
+            return CreatedAtAction(nameof(GetCosmetic), new { id = cosmetic.CosmeticId }, cosmetic);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, Cosmetic cosmetic)
+        public async Task<IActionResult> UpdateCosmetic(int id, Cosmetic cosmetic)
         {
             if (id != cosmetic.CosmeticId)
             {
                 return BadRequest();
             }
-
             await _cosmeticService.UpdateCosmetic(cosmetic);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> DeleteCosmetic(int id)
         {
             await _cosmeticService.DeleteCosmetic(id);
             return NoContent();

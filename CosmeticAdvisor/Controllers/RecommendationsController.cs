@@ -4,8 +4,8 @@ using CosmeticAdvisor.Services;
 
 namespace CosmeticAdvisor.Controllers
 {
-    [ApiController]
     [Route("api/[controller]")]
+    [ApiController]
     public class RecommendationsController : ControllerBase
     {
         private readonly IRecommendationService _recommendationService;
@@ -16,14 +16,14 @@ namespace CosmeticAdvisor.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetRecommendations()
         {
             var recommendations = await _recommendationService.GetAllRecommendations();
             return Ok(recommendations);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<IActionResult> GetRecommendation(int id)
         {
             var recommendation = await _recommendationService.GetRecommendationById(id);
             if (recommendation == null)
@@ -34,26 +34,25 @@ namespace CosmeticAdvisor.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Recommendation recommendation)
+        public async Task<IActionResult> CreateRecommendation(Recommendation recommendation)
         {
             await _recommendationService.CreateRecommendation(recommendation);
-            return CreatedAtAction(nameof(GetById), new { id = recommendation.RecommendationId }, recommendation);
+            return CreatedAtAction(nameof(GetRecommendation), new { id = recommendation.RecommendationId }, recommendation);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, Recommendation recommendation)
+        public async Task<IActionResult> UpdateRecommendation(int id, Recommendation recommendation)
         {
             if (id != recommendation.RecommendationId)
             {
                 return BadRequest();
             }
-
             await _recommendationService.UpdateRecommendation(recommendation);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> DeleteRecommendation(int id)
         {
             await _recommendationService.DeleteRecommendation(id);
             return NoContent();
