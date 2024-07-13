@@ -1,63 +1,52 @@
-﻿
-using CosmeticAdvisor.Models;
-using Dapper;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Data;
 using System.Threading.Tasks;
+using Dapper;
+using CosmeticAdvisor.DTO;
 
 namespace CosmeticAdvisor.Repositories
 {
     public class CosmeticRepository : ICosmeticRepository
     {
-        private readonly DapperContext _context;
+        private readonly IDbConnection _dbConnection;
 
-        public CosmeticRepository(DapperContext context)
+        public CosmeticRepository(IDbConnection dbConnection)
         {
-            _context = context;
+            _dbConnection = dbConnection;
         }
 
-        public async Task<IEnumerable<Cosmetic>> GetCosmetics()
+        public async Task<IEnumerable<CosmeticDto>> GetAllCosmeticsAsync()
         {
             var query = "SELECT * FROM Cosmetics";
-            using (var connection = _context.CreateConnection())
-            {
-                return await connection.QueryAsync<Cosmetic>(query);
-            }
+            return await _dbConnection.QueryAsync<CosmeticDto>(query);
         }
 
-        public async Task<Cosmetic> GetCosmetic(int id)
+        public async Task<CosmeticDto> GetCosmeticByIdAsync(int id)
         {
             var query = "SELECT * FROM Cosmetics WHERE CosmeticId = @Id";
-            using (var connection = _context.CreateConnection())
-            {
-                return await connection.QuerySingleOrDefaultAsync<Cosmetic>(query, new { Id = id });
-            }
+            return await _dbConnection.QuerySingleOrDefaultAsync<CosmeticDto>(query, new { Id = id });
         }
 
-        public async Task CreateCosmetic(Cosmetic cosmetic)
+        public async Task<CosmeticDto> CreateCosmeticAsync(CosmeticDto cosmeticDto)
         {
-            var query = "INSERT INTO Cosmetics (Name, Description, Ingredients, SkinType) VALUES (@Name, @Description, @Ingredients, @SkinType)";
-            using (var connection = _context.CreateConnection())
-            {
-                await connection.ExecuteAsync(query, cosmetic);
-            }
+            var query = "INSERT INTO Cosmetics (Name, Brand, Category, SkinType) VALUES (@Name, @Brand, @Category, @SkinType); SELECT CAST(SCOPE_IDENTITY() as int)";
+            var id = await _dbConnection.QuerySingleAsync<int>(query, cosmeticDto);
+            cosmeticDto.CosmeticId = id;
+            return cosmeticDto;
         }
 
-        public async Task UpdateCosmetic(Cosmetic cosmetic)
+        public async Task<bool> UpdateCosmeticAsync(CosmeticDto cosmeticDto)
         {
-            var query = "UPDATE Cosmetics SET Name = @Name, Description = @Description, Ingredients = @Ingredients, SkinType = @SkinType WHERE CosmeticId = @Id";
-            using (var connection = _context.CreateConnection())
-            {
-                await connection.ExecuteAsync(query, cosmetic);
-            }
+            var query = "UPDATE Cosmetics SET Name = @Name, Brand = @Brand, Category = @Category, SkinType = @SkinType WHERE CosmeticId = @CosmeticId";
+            var result = await _dbConnection.ExecuteAsync(query, cosmeticDto);
+            return result > 0;
         }
 
-        public async Task DeleteCosmetic(int id)
+        public async Task<bool> DeleteCosmeticAsync(int id)
         {
             var query = "DELETE FROM Cosmetics WHERE CosmeticId = @Id";
-            using (var connection = _context.CreateConnection())
-            {
-                await connection.ExecuteAsync(query, new { Id = id });
-            }
+            var result = await _dbConnection.ExecuteAsync(query, new { Id = id });
+            return result > 0;
         }
     }
 }

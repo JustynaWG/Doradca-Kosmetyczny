@@ -1,52 +1,42 @@
-﻿using CosmeticAdvisor.Models;
-using CosmeticAdvisor.Repositories;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using CosmeticAdvisor.DTO;
+using CosmeticAdvisor.Repositories;
 
-namespace CosmeticAdvisor.Business.Services
+namespace CosmeticAdvisor.Business
 {
     public class CustomerService : ICustomerService
     {
-        private readonly ICustomerRepository _repository;
+        private readonly ICustomerRepository _customerRepository;
 
-        public CustomerService(ICustomerRepository repository)
+        public CustomerService(ICustomerRepository customerRepository)
         {
-            _repository = repository;
+            _customerRepository = customerRepository;
         }
 
-        public async Task<IEnumerable<Customer>> GetCustomers()
+        public async Task<IEnumerable<CustomerDto>> GetAllCustomersAsync()
         {
-            return await _repository.GetCustomers();
+            return await _customerRepository.GetAllCustomersAsync();
         }
 
-        public async Task<Customer> GetCustomer(int id)
+        public async Task<CustomerDto> GetCustomerByIdAsync(int id)
         {
-            return await _repository.GetCustomer(id);
+            return await _customerRepository.GetCustomerByIdAsync(id);
         }
 
-        public async Task CreateCustomer(Customer customer)
+        public async Task<CustomerDto> CreateCustomerAsync(CustomerDto customerDto)
         {
-            await _repository.CreateCustomer(customer);
+            return await _customerRepository.CreateCustomerAsync(customerDto);
         }
 
-        public async Task UpdateCustomer(Customer customer)
+        public async Task<bool> UpdateCustomerAsync(CustomerDto customerDto)
         {
-            await _repository.UpdateCustomer(customer);
+            return await _customerRepository.UpdateCustomerAsync(customerDto);
         }
 
-        public async Task DeleteCustomer(int id)
+        public async Task<bool> DeleteCustomerAsync(int id)
         {
-            await _repository.DeleteCustomer(id);
-        }
-
-        public Task<IEnumerable<Customer>> GetAllCustomers()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Customer> GetCustomerById(int id)
-        {
-            throw new NotImplementedException();
+            return await _customerRepository.DeleteCustomerAsync(id);
         }
     }
 }

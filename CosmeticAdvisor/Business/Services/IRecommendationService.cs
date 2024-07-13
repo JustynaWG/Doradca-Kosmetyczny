@@ -1,15 +1,15 @@
-﻿using CosmeticAdvisor.Models;
+﻿using CosmeticAdvisor.DTO;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace CosmeticAdvisor.Business.Services
+namespace CosmeticAdvisor.Business
 {
     public interface IRecommendationService
     {
-        Task<IEnumerable<Recommendation>> GetAllRecommendations();
-        Task<Recommendation> GetRecommendationById(int id);
-        Task CreateRecommendation(Recommendation recommendation);
-        Task UpdateRecommendation(Recommendation recommendation);
-        Task DeleteRecommendation(int id);
+        Task<IEnumerable<RecommendationDto>> GetAllRecommendationsAsync();
+        Task<RecommendationDto> GetRecommendationByIdAsync(int id);
+        Task<RecommendationDto> CreateRecommendationAsync(RecommendationDto recommendationDto);
+        Task<bool> UpdateRecommendationAsync(RecommendationDto recommendationDto);
+        Task<bool> DeleteRecommendationAsync(int id);
     }
 }

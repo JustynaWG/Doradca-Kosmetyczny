@@ -1,31 +1,31 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using CosmeticAdvisor.Models;
-using CosmeticAdvisor.Business.Services;
+﻿using CosmeticAdvisor.Business;
+using CosmeticAdvisor.DTO;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CosmeticAdvisor.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RecommendationsController : ControllerBase
+    public class RecommendationController : ControllerBase
     {
         private readonly IRecommendationService _recommendationService;
 
-        public RecommendationsController(IRecommendationService recommendationService)
+        public RecommendationController(IRecommendationService recommendationService)
         {
             _recommendationService = recommendationService;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetRecommendations()
+        public async Task<ActionResult<IEnumerable<RecommendationDto>>> GetAllRecommendations()
         {
-            var recommendations = await _recommendationService.GetAllRecommendations();
+            var recommendations = await _recommendationService.GetAllRecommendationsAsync();
             return Ok(recommendations);
         }
-            
+
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetRecommendation(int id)
+        public async Task<ActionResult<RecommendationDto>> GetRecommendationById(int id)
         {
-            var recommendation = await _recommendationService.GetRecommendationById(id);
+            var recommendation = await _recommendationService.GetRecommendationByIdAsync(id);
             if (recommendation == null)
             {
                 return NotFound();
@@ -34,30 +34,42 @@ namespace CosmeticAdvisor.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateRecommendation(Recommendation recommendation)
+        public async Task<ActionResult<RecommendationDto>> CreateRecommendation(RecommendationDto recommendationDto)
         {
-            await _recommendationService.CreateRecommendation(recommendation);
-            return CreatedAtAction(nameof(GetRecommendation), new { id = recommendation.RecommendationId }, recommendation);
+            var createdRecommendation = await _recommendationService.CreateRecommendationAsync(recommendationDto);
+            return CreatedAtAction(nameof(GetRecommendationById), new { id = createdRecommendation.RecommendationId }, createdRecommendation);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateRecommendation(int id, Recommendation recommendation)
+        public async Task<IActionResult> UpdateRecommendation(int id, RecommendationDto recommendationDto)
         {
-            if (id != recommendation.RecommendationId)
+            if (id != recommendationDto.RecommendationId)
             {
                 return BadRequest();
             }
-            await _recommendationService.UpdateRecommendation(recommendation);
+
+            var result = await _recommendationService.UpdateRecommendationAsync(recommendationDto);
+            if (!result)
+            {
+                return NotFound();
+            }
+
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRecommendation(int id)
         {
-            await _recommendationService.DeleteRecommendation(id);
+            var result = await _recommendationService.DeleteRecommendationAsync(id);
+            if (!result)
+            {
+                return NotFound();
+            }
+
             return NoContent();
         }
     }
 }
+
 
 

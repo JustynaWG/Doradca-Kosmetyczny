@@ -1,8 +1,8 @@
+using CosmeticAdvisor.Business;
 using CosmeticAdvisor.Repositories;
-using CosmeticAdvisor.Business.Services;
-using Microsoft.AspNetCore.Builder;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using System.Data;
 
 namespace CosmeticAdvisor
 {
@@ -14,6 +14,14 @@ namespace CosmeticAdvisor
 
             // Rejestracja kontekstu Dapper
             builder.Services.AddSingleton<DapperContext>();
+
+            // Rejestracja IDbConnection
+            builder.Services.AddSingleton<IDbConnection>(provider =>
+            {
+                var configuration = provider.GetRequiredService<IConfiguration>();
+                var connectionString = configuration.GetConnectionString("Server=DESKTOP-RM3VCAU\\\\SQLEXPRESS01;Database=CosmeticAdvisorDB;Trusted_Connection=True;MultipleActiveResultSets=true");
+                return new SqlConnection(connectionString);
+            });
 
             // Rejestracja repozytoriów i us³ug
             builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
@@ -34,7 +42,7 @@ namespace CosmeticAdvisor
 
             var app = builder.Build();
 
-            // Konfiguracja pipeline ¿¹dañ HTTP
+            // Konfiguracja middleware HTTP
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();

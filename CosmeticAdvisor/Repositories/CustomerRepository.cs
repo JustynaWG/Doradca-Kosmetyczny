@@ -1,62 +1,52 @@
-﻿using CosmeticAdvisor.Models;
+﻿using CosmeticAdvisor.DTO;
 using Dapper;
 using System.Collections.Generic;
+using System.Data;
 using System.Threading.Tasks;
 
 namespace CosmeticAdvisor.Repositories
 {
     public class CustomerRepository : ICustomerRepository
     {
-        private readonly DapperContext _context;
+        private readonly IDbConnection _dbConnection;
 
-        public CustomerRepository(DapperContext context)
+        public CustomerRepository(IDbConnection dbConnection)
         {
-            _context = context;
+            _dbConnection = dbConnection;
         }
 
-        public async Task<IEnumerable<Customer>> GetCustomers()
+        public async Task<IEnumerable<CustomerDto>> GetAllCustomersAsync()
         {
             var query = "SELECT * FROM Customers";
-            using (var connection = _context.CreateConnection())
-            {
-                return await connection.QueryAsync<Customer>(query);
-            }
+            return await _dbConnection.QueryAsync<CustomerDto>(query);
         }
 
-        public async Task<Customer> GetCustomer(int id)
+        public async Task<CustomerDto> GetCustomerByIdAsync(int id)
         {
             var query = "SELECT * FROM Customers WHERE CustomerId = @Id";
-            using (var connection = _context.CreateConnection())
-            {
-                return await connection.QuerySingleOrDefaultAsync<Customer>(query, new { Id = id });
-            }
+            return await _dbConnection.QuerySingleOrDefaultAsync<CustomerDto>(query, new { Id = id });
         }
 
-        public async Task CreateCustomer(Customer customer)
+        public async Task<CustomerDto> CreateCustomerAsync(CustomerDto customerDto)
         {
-            var query = "INSERT INTO Customers (Name, Email, SkinType) VALUES (@Name, @Email, @SkinType)";
-            using (var connection = _context.CreateConnection())
-            {
-                await connection.ExecuteAsync(query, customer);
-            }
+            var query = "INSERT INTO Customers (Name, Email, SkinType) VALUES (@Name, @Email, @SkinType); SELECT CAST(SCOPE_IDENTITY() as int)";
+            var id = await _dbConnection.QuerySingleAsync<int>(query, customerDto);
+            customerDto.CustomerId = id;
+            return customerDto;
         }
 
-        public async Task UpdateCustomer(Customer customer)
+        public async Task<bool> UpdateCustomerAsync(CustomerDto customerDto)
         {
-            var query = "UPDATE Customers SET Name = @Name, Email = @Email, SkinType = @SkinType WHERE CustomerId = @Id";
-            using (var connection = _context.CreateConnection())
-            {
-                await connection.ExecuteAsync(query, customer);
-            }
+            var query = "UPDATE Customers SET Name = @Name, Email = @Email, SkinType = @SkinType WHERE CustomerId = @CustomerId";
+            var result = await _dbConnection.ExecuteAsync(query, customerDto);
+            return result > 0;
         }
 
-        public async Task DeleteCustomer(int id)
+        public async Task<bool> DeleteCustomerAsync(int id)
         {
             var query = "DELETE FROM Customers WHERE CustomerId = @Id";
-            using (var connection = _context.CreateConnection())
-            {
-                await connection.ExecuteAsync(query, new { Id = id });
-            }
+            var result = await _dbConnection.ExecuteAsync(query, new { Id = id });
+            return result > 0;
         }
     }
 }

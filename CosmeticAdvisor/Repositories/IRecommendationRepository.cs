@@ -1,4 +1,4 @@
-﻿using CosmeticAdvisor.Models;
+﻿using CosmeticAdvisor.DTO;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -6,10 +6,10 @@ namespace CosmeticAdvisor.Repositories
 {
     public interface IRecommendationRepository
     {
-        Task<IEnumerable<Recommendation>> GetRecommendations();
-        Task<Recommendation> GetRecommendation(int id);
-        Task CreateRecommendation(Recommendation recommendation);
-        Task UpdateRecommendation(Recommendation recommendation);
-        Task DeleteRecommendation(int id);
+        Task<IEnumerable<RecommendationDto>> GetAllRecommendationsAsync();
+        Task<RecommendationDto> GetRecommendationByIdAsync(int id);
+        Task<RecommendationDto> CreateRecommendationAsync(RecommendationDto recommendationDto);
+        Task<bool> UpdateRecommendationAsync(RecommendationDto recommendationDto);
+        Task<bool> DeleteRecommendationAsync(int id);
     }
 }

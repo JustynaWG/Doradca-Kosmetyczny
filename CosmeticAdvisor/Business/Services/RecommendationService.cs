@@ -1,53 +1,42 @@
-﻿using CosmeticAdvisor.Models;
-using Dapper;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using CosmeticAdvisor.DTO;
+using CosmeticAdvisor.Repositories;
 
-namespace CosmeticAdvisor.Business.Services
+namespace CosmeticAdvisor.Business
 {
     public class RecommendationService : IRecommendationService
     {
-        private readonly DapperContext _context;
+        private readonly IRecommendationRepository _recommendationRepository;
 
-        public RecommendationService(DapperContext context)
+        public RecommendationService(IRecommendationRepository recommendationRepository)
         {
-            _context = context;
+            _recommendationRepository = recommendationRepository;
         }
 
-        public async Task<IEnumerable<Recommendation>> GetAllRecommendations()
+        public async Task<IEnumerable<RecommendationDto>> GetAllRecommendationsAsync()
         {
-            using var connection = _context.CreateConnection();
-            var recommendations = await connection.QueryAsync<Recommendation>("SELECT * FROM Recommendations");
-            return recommendations;
+            return await _recommendationRepository.GetAllRecommendationsAsync();
         }
 
-        public async Task<Recommendation> GetRecommendationById(int id)
+        public async Task<RecommendationDto> GetRecommendationByIdAsync(int id)
         {
-            using var connection = _context.CreateConnection();
-            var recommendation = await connection.QueryFirstOrDefaultAsync<Recommendation>("SELECT * FROM Recommendations WHERE RecommendationId = @Id", new { Id = id });
-            return recommendation;
+            return await _recommendationRepository.GetRecommendationByIdAsync(id);
         }
 
-        public async Task CreateRecommendation(Recommendation recommendation)
+        public async Task<RecommendationDto> CreateRecommendationAsync(RecommendationDto recommendationDto)
         {
-            using var connection = _context.CreateConnection();
-            var sql = @"INSERT INTO Recommendations (Title, Description) VALUES (@Title, @Description)";
-            await connection.ExecuteAsync(sql, recommendation);
+            return await _recommendationRepository.CreateRecommendationAsync(recommendationDto);
         }
 
-        public async Task UpdateRecommendation(Recommendation recommendation)
+        public async Task<bool> UpdateRecommendationAsync(RecommendationDto recommendationDto)
         {
-            using var connection = _context.CreateConnection();
-            var sql = @"UPDATE Recommendations SET Title = @Title, Description = @Description WHERE RecommendationId = @RecommendationId";
-            await connection.ExecuteAsync(sql, recommendation);
+            return await _recommendationRepository.UpdateRecommendationAsync(recommendationDto);
         }
 
-        public async Task DeleteRecommendation(int id)
+        public async Task<bool> DeleteRecommendationAsync(int id)
         {
-            using var connection = _context.CreateConnection();
-            var sql = @"DELETE FROM Recommendations WHERE RecommendationId = @Id";
-            await connection.ExecuteAsync(sql, new { Id = id });
+            return await _recommendationRepository.DeleteRecommendationAsync(id);
         }
     }
 }

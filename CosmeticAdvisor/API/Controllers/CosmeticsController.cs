@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using CosmeticAdvisor.Models;
-using CosmeticAdvisor.Business.Services;
+using CosmeticAdvisor.DTO;
+using CosmeticAdvisor.Business;
 
 namespace CosmeticAdvisor.API.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class CosmeticsController : ControllerBase
     {
         private readonly ICosmeticService _cosmeticService;
@@ -16,16 +16,16 @@ namespace CosmeticAdvisor.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetCosmetics()
+        public async Task<IActionResult> GetAllCosmetics()
         {
-            var cosmetics = await _cosmeticService.GetAllCosmetics();
+            var cosmetics = await _cosmeticService.GetAllCosmeticsAsync();
             return Ok(cosmetics);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetCosmetic(int id)
+        public async Task<IActionResult> GetCosmeticById(int id)
         {
-            var cosmetic = await _cosmeticService.GetCosmeticById(id);
+            var cosmetic = await _cosmeticService.GetCosmeticByIdAsync(id);
             if (cosmetic == null)
             {
                 return NotFound();
@@ -34,27 +34,41 @@ namespace CosmeticAdvisor.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateCosmetic(Cosmetic cosmetic)
+        public async Task<IActionResult> CreateCosmetic([FromBody] CosmeticDto cosmeticDto)
         {
-            await _cosmeticService.CreateCosmetic(cosmetic);
-            return CreatedAtAction(nameof(GetCosmetic), new { id = cosmetic.CosmeticId }, cosmetic);
-        }
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCosmetic(int id, Cosmetic cosmetic)
-        {
-            if (id != cosmetic.CosmeticId)
+            if (cosmeticDto == null)
             {
                 return BadRequest();
             }
-            await _cosmeticService.UpdateCosmetic(cosmetic);
+
+            var createdCosmetic = await _cosmeticService.CreateCosmeticAsync(cosmeticDto);
+            return CreatedAtAction(nameof(GetCosmeticById), new { id = createdCosmetic.CosmeticId }, createdCosmetic);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateCosmetic(int id, [FromBody] CosmeticDto cosmeticDto)
+        {
+            if (cosmeticDto == null || id != cosmeticDto.CosmeticId)
+            {
+                return BadRequest();
+            }
+
+            var result = await _cosmeticService.UpdateCosmeticAsync(cosmeticDto);
+            if (!result)
+            {
+                return NotFound();
+            }
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCosmetic(int id)
         {
-            await _cosmeticService.DeleteCosmetic(id);
+            var result = await _cosmeticService.DeleteCosmeticAsync(id);
+            if (!result)
+            {
+                return NotFound();
+            }
             return NoContent();
         }
     }

@@ -1,15 +1,15 @@
-﻿using CosmeticAdvisor.Models;
+﻿using CosmeticAdvisor.DTO;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace CosmeticAdvisor.Business.Services
+namespace CosmeticAdvisor.Business
 {
     public interface ICustomerService
     {
-        Task<IEnumerable<Customer>> GetAllCustomers();
-        Task<Customer> GetCustomerById(int id);
-        Task CreateCustomer(Customer customer);
-        Task UpdateCustomer(Customer customer);
-        Task DeleteCustomer(int id);
+        Task<IEnumerable<CustomerDto>> GetAllCustomersAsync();
+        Task<CustomerDto> GetCustomerByIdAsync(int id);
+        Task<CustomerDto> CreateCustomerAsync(CustomerDto customerDto);
+        Task<bool> UpdateCustomerAsync(CustomerDto customerDto);
+        Task<bool> DeleteCustomerAsync(int id);
     }
 }
