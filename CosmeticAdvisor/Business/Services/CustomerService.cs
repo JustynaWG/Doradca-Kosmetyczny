@@ -3,7 +3,7 @@ using CosmeticAdvisor.Repositories;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace CosmeticAdvisor.Services
+namespace CosmeticAdvisor.Business.Services
 {
     public class CustomerService : ICustomerService
     {

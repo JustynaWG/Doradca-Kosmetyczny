@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using CosmeticAdvisor.Models;
-using CosmeticAdvisor.Services;
+using CosmeticAdvisor.Business.Services;
 
-namespace CosmeticAdvisor.Controllers
+namespace CosmeticAdvisor.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

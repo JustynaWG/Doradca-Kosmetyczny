@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace CosmeticAdvisor.Services
+namespace CosmeticAdvisor.Business.Services
 {
     public interface IRecommendationService
     {

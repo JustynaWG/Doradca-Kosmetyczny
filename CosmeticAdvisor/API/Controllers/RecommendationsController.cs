@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using CosmeticAdvisor.Models;
-using CosmeticAdvisor.Services;
+using CosmeticAdvisor.Business.Services;
 
-namespace CosmeticAdvisor.Controllers
+namespace CosmeticAdvisor.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -21,7 +21,7 @@ namespace CosmeticAdvisor.Controllers
             var recommendations = await _recommendationService.GetAllRecommendations();
             return Ok(recommendations);
         }
-
+            
         [HttpGet("{id}")]
         public async Task<IActionResult> GetRecommendation(int id)
         {
@@ -59,3 +59,5 @@ namespace CosmeticAdvisor.Controllers
         }
     }
 }
+
+

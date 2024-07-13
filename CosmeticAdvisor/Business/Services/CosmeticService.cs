@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 
-namespace CosmeticAdvisor.Services
+namespace CosmeticAdvisor.Business.Services
 {
     public class CosmeticService : ICosmeticService
     {
